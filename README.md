@@ -6,6 +6,17 @@
 - **Formato mínimo**: `id,nota`
 - **Compatible con**: Formulario `form[name="Forma"]` y acción `?app=prof_notas`
 
+## ⚠️ CONFIGURACIÓN CRÍTICA REQUERIDA
+
+> **🚨 IMPORTANTE**: El script requiere configuración especial del navegador y Tampermonkey para funcionar correctamente.
+>
+> **📋 Checklist rápido antes de usar:**
+> - ✅ Modo desarrollador habilitado en el navegador
+> - ✅ "Allow User Scripts" habilitado en Tampermonkey
+> - ✅ Config mode en "Advanced" en Tampermonkey
+>
+> **Sin estas configuraciones el script NO funcionará. Ver instrucciones detalladas abajo.**
+
 ## ✅ ¡EL SCRIPT FUNCIONARÁ PERFECTAMENTE!
 
 Tu página tiene exactamente la estructura necesaria:
@@ -34,13 +45,78 @@ Tu página tiene exactamente la estructura necesaria:
 - Chrome: https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo
 - Firefox: https://addons.mozilla.org/firefox/addon/tampermonkey/
 
-### 2. Instalar el Script
+### 2. ⚠️ Configuración Requerida del Navegador
+
+#### A. Habilitar Modo Desarrollador (Developer Mode)
+**Chrome:**
+1. Ve a `chrome://extensions/`
+2. Activa **"Modo de desarrollador"** en la esquina superior derecha
+3. Esto es necesario para que los userscripts funcionen correctamente
+
+**Firefox:**
+1. Ve a `about:config`
+2. Acepta el riesgo si aparece la advertencia
+3. Busca `extensions.webextensions.userScripts.enabled`
+4. Cambia el valor a `true`
+
+#### B. Configurar Tampermonkey
+1. **Abre el Dashboard de Tampermonkey**
+2. **Ve a la pestaña "Settings" (Configuración)**
+3. **En la sección "Security":**
+   - Cambia **"Config mode"** a **"Advanced"**
+   - Habilita **"Allow User Scripts"** ✅
+   - Habilita **"Allow access to file URLs"** ✅ (opcional, pero recomendado)
+
+**⚠️ Sin estas configuraciones, el script NO funcionará correctamente.**
+
+### 3. Instalar el Script
+
+#### 🎯 Opción A: Instalación Directa desde GitHub (Recomendado)
+
+> **⚡ INSTALACIÓN EN UN CLICK:**
+>
+> **📥 [CLICK AQUÍ PARA INSTALAR EL SCRIPT](https://github.com/will824/udea_gradereport/raw/main/udea_grade_reporter_optimized.user.js)**
+>
+> *(El enlace abrirá Tampermonkey automáticamente para la instalación)*
+
+**Pasos detallados:**
+
+1. **Click en el enlace de arriba** o copia esta URL en tu navegador:
+   ```
+   https://github.com/will824/udea_gradereport/raw/main/udea_grade_reporter_optimized.user.js
+   ```
+
+2. **Tampermonkey detectará automáticamente** el script y mostrará una ventana de instalación
+
+3. **Click "Install"** para confirmar la instalación
+
+4. **¡Listo!** El script se instalará automáticamente y estará activo
+
+**📝 Método alternativo:**
+- Ve a: https://github.com/will824/udea_gradereport/blob/main/udea_grade_reporter_optimized.user.js
+- Click en el botón **"Raw"** en la esquina superior derecha del código
+
+**✅ Ventajas de este método:**
+- 🚀 **Instalación en un solo click**
+- 📦 **Siempre obtienes la versión más reciente**
+- 🔄 **Actualizaciones automáticas disponibles**
+- ✋ **No necesitas copiar y pegar código manualmente**
+- 🔒 **Instalación segura directamente desde el repositorio oficial**
+
+**🔄 Actualizaciones automáticas:**
+Tampermonkey puede verificar automáticamente si hay nuevas versiones del script. Para habilitarlo:
+1. Ve al Dashboard de Tampermonkey
+2. En la configuración del script, habilita "Check for updates"
+
+#### 🔧 Opción B: Instalación Manual
+Si prefieres instalar manualmente:
+
 1. Abre Tampermonkey Dashboard
 2. Click "Create a new script"
 3. Reemplaza todo el contenido con el código de `udea_grade_reporter_optimized.user.js`
 4. Presiona Ctrl+S para guardar
 
-### 3. Usar el Sistema
+### 4. Usar el Sistema
 
 #### A. Preparar CSV
 Tu archivo CSV debe tener este formato simple:
@@ -139,9 +215,26 @@ Ahora solo necesitas:
 
 ## 🆘 Solución de Problemas
 
-### El panel no aparece:
+### 🚨 El script no funciona / El panel no aparece:
+
+**1. Verificar configuración del navegador:**
+- ✅ **Chrome**: Modo desarrollador habilitado en `chrome://extensions/`
+- ✅ **Firefox**: `extensions.webextensions.userScripts.enabled = true` en `about:config`
+
+**2. Verificar configuración de Tampermonkey:**
+- ✅ Config mode en **"Advanced"**
+- ✅ **"Allow User Scripts"** habilitado
+- ✅ Script activo (interruptor verde en Dashboard)
+
+**3. Otras verificaciones:**
 - Verifica que estés en la página correcta (debe decir "INGRESO DE NOTAS")
 - Revisa la consola del navegador (F12) para errores
+- Recarga la página después de cambiar configuraciones
+
+### El panel aparece pero no funciona:
+- Usa el botón **"🔍 Diagnóstico del Formulario"** en el panel
+- Revisa la consola (F12) para mensajes de error
+- Verifica que el formulario de UdeA esté completamente cargado
 
 ### No encuentra estudiantes:
 - Asegúrate que los IDs en tu CSV coinciden exactamente
