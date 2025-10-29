@@ -89,6 +89,12 @@
                     </button>
                 </div>
 
+                <div style="margin-bottom: 15px;">
+                    <button id="diagnosticBtn" style="width: 100%; background: #9C27B0; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                        🔍 Diagnóstico del Formulario
+                    </button>
+                </div>
+
                 <div style="font-size: 10px; color: #ccc; text-align: center; border-top: 1px solid #555; padding-top: 10px; display: flex; justify-content: space-between;">
                     <button id="minimizeBtn" style="background: none; border: none; color: #ccc; cursor: pointer; font-size: 12px;">➖ Minimizar</button>
                     <button id="closeBtn" style="background: none; border: none; color: #ccc; cursor: pointer; font-size: 12px;">❌ Cerrar</button>
@@ -107,6 +113,7 @@
         document.getElementById('fillGradesBtn').onclick = fillAllGrades;
         document.getElementById('clearAllBtn').onclick = clearAllGrades;
         document.getElementById('saveFormBtn').onclick = saveForm;
+        document.getElementById('diagnosticBtn').onclick = runDiagnostic;
         document.getElementById('minimizeBtn').onclick = minimizePanel;
         document.getElementById('closeBtn').onclick = closePanel;
 
@@ -334,10 +341,152 @@
     // Save form (submit)
     function saveForm() {
         const form = document.querySelector(CONFIG.formSelector);
-        if (form && confirm('¿Guardar las notas en el sistema UdeA?')) {
-            updateStatus('💾 Guardando notas en el sistema...', 'info');
-            form.submit();
+        if (!form) {
+            updateStatus('❌ No se encontró el formulario para guardar', 'error');
+            console.error('Formulario no encontrado:', CONFIG.formSelector);
+            return;
         }
+
+        if (confirm('¿Guardar las notas en el sistema UdeA?')) {
+            updateStatus('💾 Guardando notas en el sistema...', 'info');
+
+            try {
+                // Método 1: Intentar submit() normal
+                console.log('🔄 Intentando submit() normal...');
+                form.submit();
+
+                // Si llegamos aquí, el submit funcionó
+                updateStatus('✅ Formulario enviado correctamente', 'success');
+
+            } catch (error) {
+                console.error('❌ Error con submit() normal:', error);
+
+                try {
+                    // Método 2: Buscar botón de submit y hacer click
+                    console.log('🔄 Buscando botón de submit...');
+
+                    // Buscar diferentes tipos de botones de submit
+                    let submitBtn = form.querySelector('input[type="submit"]') ||
+                                   form.querySelector('button[type="submit"]') ||
+                                   form.querySelector('input[value*="Guardar"]') ||
+                                   form.querySelector('input[value*="GUARDAR"]') ||
+                                   form.querySelector('input[value*="Enviar"]') ||
+                                   form.querySelector('input[value*="ENVIAR"]') ||
+                                   form.querySelector('button[onclick*="submit"]') ||
+                                   form.querySelector('input[onclick*="submit"]');
+
+                    // Si no encuentra, buscar en todo el documento
+                    if (!submitBtn) {
+                        submitBtn = document.querySelector('input[type="submit"]') ||
+                                   document.querySelector('button[onclick*="submit"]') ||
+                                   document.querySelector('input[onclick*="submit"]');
+                    }
+
+                    if (submitBtn) {
+                        console.log('✅ Botón de submit encontrado:', submitBtn);
+                        console.log('📝 Tipo:', submitBtn.type, 'Valor:', submitBtn.value, 'Text:', submitBtn.textContent);
+                        submitBtn.click();
+                        updateStatus('✅ Formulario enviado via botón', 'success');
+                    } else {
+                        // Método 3: Crear evento submit manual
+                        console.log('🔄 Intentando evento submit manual...');
+                        const submitEvent = new Event('submit', {
+                            bubbles: true,
+                            cancelable: true
+                        });
+
+                        const eventResult = form.dispatchEvent(submitEvent);
+                        if (eventResult) {
+                            // Si el evento no fue cancelado, hacer submit
+                            form.submit();
+                            updateStatus('✅ Formulario enviado via evento', 'success');
+                        } else {
+                            updateStatus('❌ El envío fue cancelado por validaciones', 'error');
+                        }
+                    }
+
+                } catch (error2) {
+                    console.error('❌ Error con métodos alternativos:', error2);
+                    updateStatus('❌ Error al enviar formulario. Usa el botón original del sistema.', 'error');
+
+                    // Método 4: Diagnóstico y instrucciones
+                    console.log('🔍 DIAGNÓSTICO DEL FORMULARIO:');
+                    console.log('📋 Formulario encontrado:', form);
+                    console.log('🎯 Action:', form.action);
+                    console.log('📡 Method:', form.method);
+                    console.log('📝 Name:', form.name);
+                    console.log('🔘 Botones en formulario:', form.querySelectorAll('input, button'));
+                    console.log('🔘 Todos los inputs:', form.querySelectorAll('input'));
+                    console.log('🔘 Todos los botones:', form.querySelectorAll('button'));
+
+                    updateStatus('❌ Error al enviar formulario. Revisa la consola (F12) para detalles.', 'error');
+
+                    // Mostrar instrucciones más detalladas
+                    alert('No se pudo enviar automáticamente. Por favor:\n\n1. Revisa que las notas estén correctas\n2. Usa el botón "Guardar" o "Enviar" del formulario original de UdeA\n3. Si hay errores, el sistema te los mostrará\n4. Abre la consola (F12) para ver detalles técnicos');
+                }
+            }
+        }
+    }
+
+    // Run diagnostic of the form
+    function runDiagnostic() {
+        console.log('🔍 === DIAGNÓSTICO COMPLETO DEL FORMULARIO ===');
+
+        const form = document.querySelector(CONFIG.formSelector);
+        const rows = document.querySelectorAll(CONFIG.studentRowSelector);
+        const gradeSelects = document.querySelectorAll(CONFIG.gradeSelectSelector);
+
+        // Información del formulario
+        console.log('📋 FORMULARIO:');
+        console.log('  - Encontrado:', !!form);
+        if (form) {
+            console.log('  - Name:', form.name);
+            console.log('  - Action:', form.action);
+            console.log('  - Method:', form.method);
+            console.log('  - ID:', form.id);
+        }
+
+        // Botones de submit
+        console.log('🔘 BOTONES DE SUBMIT:');
+        const allSubmitInputs = document.querySelectorAll('input[type="submit"]');
+        const allSubmitButtons = document.querySelectorAll('button[type="submit"]');
+        const allButtonsWithSubmit = document.querySelectorAll('input[onclick*="submit"], button[onclick*="submit"]');
+
+        console.log('  - input[type="submit"]:', allSubmitInputs.length, allSubmitInputs);
+        console.log('  - button[type="submit"]:', allSubmitButtons.length, allSubmitButtons);
+        console.log('  - Con onclick submit:', allButtonsWithSubmit.length, allButtonsWithSubmit);
+
+        // Información de estudiantes
+        console.log('👥 ESTUDIANTES:');
+        console.log('  - Filas encontradas:', rows.length);
+        console.log('  - Selectores de notas:', gradeSelects.length);
+
+        // Muestra los primeros 3 estudiantes como ejemplo
+        for (let i = 0; i < Math.min(3, rows.length); i++) {
+            const row = rows[i];
+            const idInput = row.querySelector(CONFIG.studentIdSelector);
+            const nameCell = row.querySelector(CONFIG.studentNameSelector);
+            const gradeSelect = row.querySelector(CONFIG.gradeSelectSelector);
+
+            console.log(`  - Estudiante ${i + 1}:`);
+            console.log(`    ID: ${idInput ? idInput.value : 'No encontrado'}`);
+            console.log(`    Nombre: ${nameCell ? nameCell.textContent.trim() : 'No encontrado'}`);
+            console.log(`    Selector notas: ${!!gradeSelect}`);
+        }
+
+        // Estado actual
+        let statusMsg = `🔍 DIAGNÓSTICO:\n`;
+        statusMsg += `📋 Formulario: ${form ? '✅' : '❌'}\n`;
+        statusMsg += `👥 Estudiantes: ${rows.length}\n`;
+        statusMsg += `📝 Notas: ${gradeSelects.length}\n`;
+        statusMsg += `🔘 Botones submit: ${allSubmitInputs.length + allSubmitButtons.length + allButtonsWithSubmit.length}\n\n`;
+        statusMsg += `📊 Datos cargados: ${gradeData.size} registros\n\n`;
+        statusMsg += `💡 Revisa la consola (F12) para detalles completos`;
+
+        updateStatus(statusMsg, 'info');
+
+        // Alertar al usuario
+        alert(`Diagnóstico completado!\n\nFormulario encontrado: ${form ? 'SÍ' : 'NO'}\nEstudiantes detectados: ${rows.length}\nBotones de envío: ${allSubmitInputs.length + allSubmitButtons.length + allButtonsWithSubmit.length}\n\nRevisa la consola del navegador (F12) para más detalles.`);
     }
 
     // Update status message

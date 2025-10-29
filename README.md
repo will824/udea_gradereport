@@ -1,10 +1,10 @@
 # UdeA Grade Reporter - Instrucciones de Uso
 
-## 🎯 Sistema Detectado
-**Universidad de Antioquia - Sistema de Ingreso de Notas**
-- Formulario: `form[name="Forma"]`
-- Acción: `?app=prof_notas`
-- Estudiantes detectados: 49 (según tu ejemplo)
+## 🎯 Sistema Automatizado de Ingreso de Notas
+**Universidad de Antioquia - Formato CSV Simplificado**
+- **Solo 2 columnas necesarias**: ID y Nota
+- **Formato mínimo**: `id,nota`
+- **Compatible con**: Formulario `form[name="Forma"]` y acción `?app=prof_notas`
 
 ## ✅ ¡EL SCRIPT FUNCIONARÁ PERFECTAMENTE!
 
@@ -43,13 +43,27 @@ Tu página tiene exactamente la estructura necesaria:
 ### 3. Usar el Sistema
 
 #### A. Preparar CSV
-Tu archivo CSV debe tener este formato:
+Tu archivo CSV debe tener este formato simple:
 ```csv
-id,apellidos,nombres,email,nota
-1028028853,ALBORNOZ VILLADIEGO,JOSÉ FERNANDO,jose@email.com,4.0
-1003433503,ALVAREZ PADILLA,LUIS FERNANDO,luis@email.com,3.9
-1036957018,ALZATE CASTAÑO,JONATHAN ARLEY,jonathan@email.com,4.7
+id,nota
+1028028853,4.0
+1003433503,3.9
+1036957018,4.7
+1118550877,3.8
+1028028765,4.5
 ```
+
+**Solo necesitas 2 columnas:**
+- **id**: Cédula del estudiante
+- **nota**: Calificación (0.0 a 5.0)
+
+**✅ Ventajas del formato simplificado:**
+- Fácil de crear desde Excel o cualquier hoja de cálculo
+- Menor tamaño de archivo
+- Menor posibilidad de errores
+- Procesamiento más rápido
+
+**📄 Archivo de ejemplo**: Ver `udea_minimal_format.csv` en este repositorio
 
 #### B. Pasos en la página de notas:
 1. **Navega a la página de ingreso de notas** en UdeA
@@ -98,8 +112,8 @@ El script:
 
 ### CSV Format:
 - **Columna 1**: ID/Cédula (ej: 1028028853)
-- **Columna 5**: Nota (ej: 4.5)
-- **Otras columnas**: Se ignoran, pueden ser apellidos, nombres, email
+- **Columna 2**: Nota (ej: 4.5)
+- **Formato mínimo**: Solo requiere `id,nota` (sin columnas adicionales)
 
 ### Valores de Notas:
 - Rango: 0.0 a 5.0
@@ -134,7 +148,8 @@ Ahora solo necesitas:
 - Los IDs deben estar en la primera columna del CSV
 
 ### Las notas no se llenan:
-- Verifica que las notas estén en la columna 5 del CSV
+- Verifica que las notas estén en la segunda columna del CSV
 - Las notas deben ser números entre 0.0 y 5.0
+- Asegúrate que el CSV tiene el formato: `id,nota` (sin espacios extra)
 
 ¡Listo para automatizar el ingreso de notas en UdeA! 🎓
