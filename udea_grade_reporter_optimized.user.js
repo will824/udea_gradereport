@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      2.0
 // @description  Automatically fill UdeA grade entry system from CSV data
-// @author       You
+// @author       William Cornejo
 // @match        *://ayudame2.udea.edu.co/*
 // @match        *://*.udea.edu.co/*
 // @grant        none
